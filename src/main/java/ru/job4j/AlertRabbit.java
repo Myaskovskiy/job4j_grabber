@@ -6,6 +6,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -13,22 +14,30 @@ import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
-    public static void main(String[] args) {
-        Properties cfg = new Properties();
-        try (FileInputStream in = new FileInputStream("./data/rabbit.properties")) {
-            cfg.load(in);
+
+    static Properties getProperties(String path) {
+        Properties properties = new Properties();
+        try (FileInputStream in = new FileInputStream(path)) {
+            properties.load(in);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImportRabbitPr importRabbitPr = new ImportRabbitPr(cfg);
+        return properties;
+    }
+
+    public static void main(String[] args) {
+
+        int interval = Integer.parseInt(getProperties("./data/rabbit.properties")
+                .getProperty("rabbit.interval"));
+
         try {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDetail job = newJob(Rabbit.class).build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(importRabbitPr.getPr())
+                    .withIntervalInSeconds(interval)
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
