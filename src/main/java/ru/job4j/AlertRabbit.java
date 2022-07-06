@@ -13,7 +13,9 @@ import java.util.Properties;
 import static org.quartz.JobBuilder.*;
 import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
-
+/**
+ * class AlertRabbit
+ */
 public class AlertRabbit {
 
     static Properties getProperties() {
