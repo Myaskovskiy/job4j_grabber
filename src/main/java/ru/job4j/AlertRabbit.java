@@ -6,6 +6,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
@@ -15,40 +16,36 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
 
-
     static Properties getProperties() {
         Properties properties = new Properties();
-        try (FileInputStream in = new FileInputStream("./data/rabbit.properties")) {
+        try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             properties.load(in);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
         return properties;
     }
 
-    public Connection init() throws ClassNotFoundException, SQLException {
+    public Connection init(Properties pr) throws ClassNotFoundException, SQLException {
         Connection cn;
-        Class.forName(getProperties().getProperty("driver-class-name"));
+        Class.forName(pr.getProperty("driver-class-name"));
         cn = DriverManager.getConnection(
-                getProperties().getProperty("url"),
-                getProperties().getProperty("username"),
-                getProperties().getProperty("password")
+                pr.getProperty("url"),
+                pr.getProperty("username"),
+                pr.getProperty("password")
         );
         return cn;
     }
 
     public static void main(String[] args) {
         AlertRabbit rabbit = new AlertRabbit();
-
-        int interval = Integer.parseInt(getProperties()
+        Properties pr = getProperties();
+        int interval = Integer.parseInt(pr
                 .getProperty("rabbit.interval"));
-        int sleep = Integer.parseInt(getProperties()
+        int sleep = Integer.parseInt(pr
                 .getProperty("rabbit.sleep"));
-
         try {
-            Connection cn = rabbit.init();
+            Connection cn = rabbit.init(pr);
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
