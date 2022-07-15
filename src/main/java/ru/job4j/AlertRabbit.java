@@ -46,8 +46,7 @@ public class AlertRabbit {
                 .getProperty("rabbit.interval"));
         int sleep = Integer.parseInt(pr
                 .getProperty("rabbit.sleep"));
-        try (Connection cn = rabbit.init(pr))
-        {
+        try (Connection cn = rabbit.init(pr)) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
