@@ -15,7 +15,7 @@ public class HabrCareerParse implements Parse {
     private static final String SOURCE_LINK = "https://career.habr.com";
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer?page=", SOURCE_LINK);
     private final DateTimeParser dateTimeParser;
-    private static final int COUNT_PAGE = 1;
+    private static final int COUNT_PAGE = 2;
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
@@ -26,8 +26,8 @@ public class HabrCareerParse implements Parse {
         Document document = null;
         try {
             document = connection.get();
-        } catch (IllegalArgumentException | IOException iae) {
-            iae.printStackTrace();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Test retrieveDescription", e);
         }
         Element description = document.select(".style-ugc").first();
         return description.text();
@@ -47,15 +47,15 @@ public class HabrCareerParse implements Parse {
     }
 
     @Override
-    public List<Post> list(String link) {
+    public List<Post> list(String link) throws IllegalArgumentException {
         List<Post> listPost = new ArrayList<>();
         for (int i = 1; i <= COUNT_PAGE; i++) {
             Connection connection = Jsoup.connect(link + i);
             Document document = null;
             try {
                 document = connection.get();
-            } catch (IllegalArgumentException | IOException iae) {
-                iae.printStackTrace();
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Test list", e);
             }
             Elements rows = document.select(".vacancy-card__inner");
             for (Element row : rows) {
