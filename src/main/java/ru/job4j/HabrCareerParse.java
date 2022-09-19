@@ -14,8 +14,9 @@ public class HabrCareerParse implements Parse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer?page=", SOURCE_LINK);
-    private final DateTimeParser dateTimeParser;
     private static final int COUNT_PAGE = 2;
+    private final DateTimeParser dateTimeParser;
+
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
@@ -47,7 +48,7 @@ public class HabrCareerParse implements Parse {
     }
 
     @Override
-    public List<Post> list(String link) throws IllegalArgumentException {
+    public List<Post> list(String link) {
         List<Post> listPost = new ArrayList<>();
         for (int i = 1; i <= COUNT_PAGE; i++) {
             Connection connection = Jsoup.connect(link + i);
