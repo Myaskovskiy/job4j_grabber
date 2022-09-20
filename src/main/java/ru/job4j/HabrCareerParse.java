@@ -14,9 +14,8 @@ public class HabrCareerParse implements Parse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer?page=", SOURCE_LINK);
-    private static final int COUNT_PAGE = 2;
+    private static final int COUNT_PAGE = 1;
     private final DateTimeParser dateTimeParser;
-
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
@@ -70,9 +69,18 @@ public class HabrCareerParse implements Parse {
     public static void main(String[] args) {
         HabrCareerDateTimeParser habrCareerDateTimeParser = new HabrCareerDateTimeParser();
         HabrCareerParse habrCareerParse = new HabrCareerParse(habrCareerDateTimeParser);
+        StoreParser storeParser = new StoreParser();
         String link = PAGE_LINK;
         List<Post> list = habrCareerParse.list(link);
-        System.out.println(list.get(0));
-        System.out.println(list.size());
+        for (Post post: list) {
+            storeParser.save(post);
+        }
+        List<Post> listNew = storeParser.getAll();
+        Post postList = listNew.get(0);
+        Post post = list.get(0);
+        Post postNew = storeParser.findById(post.getId());
+        System.out.println("сравнение");
+        System.out.println(post.equals(postNew));
+        System.out.println(post.equals(postList));
     }
 }
