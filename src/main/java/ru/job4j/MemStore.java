@@ -3,11 +3,13 @@ package ru.job4j;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreParser implements Store {
+public class MemStore implements Store {
     private List<Post> list = new ArrayList<>();
+    private int id = 0;
 
     @Override
     public void save(Post post) {
+        post.setId(id++);
         this.list.add(post);
     }
 
@@ -18,15 +20,18 @@ public class StoreParser implements Store {
 
     @Override
     public Post findById(int id) {
-        Post post = null;
-        Post res = null;
-        for (int i = 0; i < this.list.size(); i++) {
-            post = this.list.get(i);
-            if (post.getId() == id) {
-                res = post;
+        int index = indexOf(id);
+        return index != -1 ? list.get(index) : null;
+    }
+
+    private int indexOf(int id) {
+        int index = -1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId() == id) {
+                index = i;
                 break;
             }
         }
-        return res;
+        return index;
     }
 }

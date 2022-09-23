@@ -69,16 +69,16 @@ public class HabrCareerParse implements Parse {
     public static void main(String[] args) {
         HabrCareerDateTimeParser habrCareerDateTimeParser = new HabrCareerDateTimeParser();
         HabrCareerParse habrCareerParse = new HabrCareerParse(habrCareerDateTimeParser);
-        StoreParser storeParser = new StoreParser();
+        MemStore memStore = new MemStore();
         String link = PAGE_LINK;
         List<Post> list = habrCareerParse.list(link);
         for (Post post: list) {
-            storeParser.save(post);
+            memStore.save(post);
         }
-        List<Post> listNew = storeParser.getAll();
+        List<Post> listNew = memStore.getAll();
         Post postList = listNew.get(0);
         Post post = list.get(0);
-        Post postNew = storeParser.findById(post.getId());
+        Post postNew = memStore.findById(post.getId());
         System.out.println("сравнение");
         System.out.println(post.equals(postNew));
         System.out.println(post.equals(postList));
