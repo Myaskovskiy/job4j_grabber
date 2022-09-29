@@ -79,6 +79,7 @@ public class HabrCareerParse implements Parse {
         Post postList = listNew.get(0);
         Post post = list.get(0);
         Post postNew = memStore.findById(post.getId());
+        System.out.println(list.get(0));
         System.out.println("сравнение");
         System.out.println(post.equals(postNew));
         System.out.println(post.equals(postList));

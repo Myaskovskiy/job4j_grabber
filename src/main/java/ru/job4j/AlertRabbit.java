@@ -19,6 +19,8 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
 
     static Properties getProperties() {
+
+
         Properties properties = new Properties();
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             properties.load(in);
