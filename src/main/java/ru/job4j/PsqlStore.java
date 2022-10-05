@@ -105,7 +105,7 @@ public class PsqlStore implements Store, AutoCloseable {
         }
         return properties;
     }
-
+    /*test*/
     public static void main(String[] args) throws Exception {
         Properties pr = getProperties();
         Post post = new Post("Системный аналитик (Микросервисы)",
